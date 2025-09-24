@@ -1,18 +1,18 @@
 //
-//  Example1View.swift
-//  Joke
+//  Example3View.swift
+//  Snippets
 //
 //  Created by Robin Kanatzar on 9/24/25.
 //
 
 import SwiftUI
 
-struct Example1View: View {
+struct Example3View: View {
     var body: some View {
-        Text("Example 1")
+        Text("3")
     }
 }
 
 #Preview {
-    Example1View()
+    Example3View()
 }
