@@ -1,34 +1,49 @@
-# Gradle files
-.gradle/
-build/
+# Xcode
+.DS_Store
+*/build/
+DerivedData/
+xcuserdata/
+*.xccheckout
+*.xcscmblueprint
+*.moved-aside
+*.xcuserstate
+*.xcworkspace/xcuserdata
 
-# Local configuration file (sdk path, etc)
-local.properties
+# Swift Package Manager
+.swiftpm/
+.build/
 
-# Log/OS Files
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+Carthage/Checkouts/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Bundler
+.bundle
+
+# General
+*.swp
+*.lock
+*.tmp
+*.idea/
+*.orig
 *.log
 
-# Android Studio generated files and folders
-captures/
-.externalNativeBuild/
-.cxx/
-*.aab
-*.apk
-output-metadata.json
+# App-specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
 
-# IntelliJ
-*.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
-
-# Keystore files
-*.jks
-*.keystore
-
-# Google Services (e.g. APIs or Firebase)
-google-services.json
-
-# Android Profiling
-*.hprof
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
