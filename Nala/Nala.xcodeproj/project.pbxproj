@@ -22,6 +22,7 @@
 		6A8415A72E8D695400202D94 /* Example10View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A84159D2E8D695400202D94 /* Example10View.swift */; };
 		6B11393D2E902BE20087595E /* Example8View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B11393C2E902BE20087595E /* Example8View.swift */; };
 		6B11393F2E902C6E0087595E /* Example9View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B11393E2E902C6E0087595E /* Example9View.swift */; };
+		6B1139412E9034F60087595E /* KnockKnockJokeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B1139402E9034F60087595E /* KnockKnockJokeView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		6A84159D2E8D695400202D94 /* Example10View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example10View.swift; sourceTree = "<group>"; };
 		6B11393C2E902BE20087595E /* Example8View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example8View.swift; sourceTree = "<group>"; };
 		6B11393E2E902C6E0087595E /* Example9View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example9View.swift; sourceTree = "<group>"; };
+		6B1139402E9034F60087595E /* KnockKnockJokeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnockKnockJokeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				6B11393E2E902C6E0087595E /* Example9View.swift */,
 				6A84159D2E8D695400202D94 /* Example10View.swift */,
 				6A84159B2E8D695400202D94 /* SelfTalkView.swift */,
+				6B1139402E9034F60087595E /* KnockKnockJokeView.swift */,
 				6A0850952E8D688D00FF2A43 /* Assets.xcassets */,
 				6A0850972E8D688D00FF2A43 /* Preview Content */,
 			);
@@ -183,6 +186,7 @@
 				6A8415A52E8D695400202D94 /* SelfTalkView.swift in Sources */,
 				6B11393F2E902C6E0087595E /* Example9View.swift in Sources */,
 				6A8415A22E8D695400202D94 /* Example7View.swift in Sources */,
+				6B1139412E9034F60087595E /* KnockKnockJokeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

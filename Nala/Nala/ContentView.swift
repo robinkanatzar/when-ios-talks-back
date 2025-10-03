@@ -66,6 +66,11 @@ struct ContentView: View {
                     } label: {
                         Text("Self Talk View")
                     }
+                    NavigationLink {
+                        KnockKnockJokeView()
+                    } label: {
+                        Text("Knock Knock Jokes View")
+                    }
                     
                     Spacer()
                 }
