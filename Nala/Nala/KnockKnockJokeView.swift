@@ -9,7 +9,7 @@ import SwiftUI
 import AVFoundation
 import Combine
 
-enum OutputMode: String, CaseIterable, Identifiable {
+private enum OutputMode: String, CaseIterable, Identifiable {
     case audio = "Audio"
     case text = "Text"
     case both = "Audio + Text"

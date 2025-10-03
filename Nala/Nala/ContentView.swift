@@ -51,7 +51,7 @@ struct ContentView: View {
                     NavigationLink {
                         Example9View()
                     } label: {
-                        Text("Example 9: ")
+                        Text("Example 9: Audio out options")
                     }
                     
                     Divider()
