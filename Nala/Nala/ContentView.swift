@@ -43,13 +43,23 @@ struct ContentView: View {
                     } label: {
                         Text("Example 7: Joke When VoiceOver Off")
                     }
+                    NavigationLink {
+                        Example8View()
+                    } label: {
+                        Text("Example 8: Toggle Text View")
+                    }
+                    NavigationLink {
+                        Example9View()
+                    } label: {
+                        Text("Example 9: ")
+                    }
                     
                     Divider()
                     
                     NavigationLink {
-                        Example9View()
+                        Example10View()
                     } label: {
-                        Text("Example 9: Joke phone talks to itself")
+                        Text("Example 10: Joke phone talks to itself")
                     }
                     NavigationLink {
                         SelfTalkView()

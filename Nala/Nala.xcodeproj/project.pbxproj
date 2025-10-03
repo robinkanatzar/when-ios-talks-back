@@ -16,11 +16,12 @@
 		6A8415A02E8D695400202D94 /* Example3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8415962E8D695400202D94 /* Example3View.swift */; };
 		6A8415A12E8D695400202D94 /* Example4View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8415972E8D695400202D94 /* Example4View.swift */; };
 		6A8415A22E8D695400202D94 /* Example7View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8415982E8D695400202D94 /* Example7View.swift */; };
-		6A8415A32E8D695400202D94 /* Example8View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8415992E8D695400202D94 /* Example8View.swift */; };
 		6A8415A42E8D695400202D94 /* Example2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A84159A2E8D695400202D94 /* Example2View.swift */; };
 		6A8415A52E8D695400202D94 /* SelfTalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A84159B2E8D695400202D94 /* SelfTalkView.swift */; };
 		6A8415A62E8D695400202D94 /* Example1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A84159C2E8D695400202D94 /* Example1View.swift */; };
-		6A8415A72E8D695400202D94 /* Example9View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A84159D2E8D695400202D94 /* Example9View.swift */; };
+		6A8415A72E8D695400202D94 /* Example10View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A84159D2E8D695400202D94 /* Example10View.swift */; };
+		6B11393D2E902BE20087595E /* Example8View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B11393C2E902BE20087595E /* Example8View.swift */; };
+		6B11393F2E902C6E0087595E /* Example9View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B11393E2E902C6E0087595E /* Example9View.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,11 +35,12 @@
 		6A8415962E8D695400202D94 /* Example3View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example3View.swift; sourceTree = "<group>"; };
 		6A8415972E8D695400202D94 /* Example4View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example4View.swift; sourceTree = "<group>"; };
 		6A8415982E8D695400202D94 /* Example7View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example7View.swift; sourceTree = "<group>"; };
-		6A8415992E8D695400202D94 /* Example8View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example8View.swift; sourceTree = "<group>"; };
 		6A84159A2E8D695400202D94 /* Example2View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example2View.swift; sourceTree = "<group>"; };
 		6A84159B2E8D695400202D94 /* SelfTalkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelfTalkView.swift; sourceTree = "<group>"; };
 		6A84159C2E8D695400202D94 /* Example1View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example1View.swift; sourceTree = "<group>"; };
-		6A84159D2E8D695400202D94 /* Example9View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example9View.swift; sourceTree = "<group>"; };
+		6A84159D2E8D695400202D94 /* Example10View.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Example10View.swift; sourceTree = "<group>"; };
+		6B11393C2E902BE20087595E /* Example8View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example8View.swift; sourceTree = "<group>"; };
+		6B11393E2E902C6E0087595E /* Example9View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example9View.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,8 +82,9 @@
 				6A8415952E8D695400202D94 /* Example5View.swift */,
 				6A8415942E8D695400202D94 /* Example6View.swift */,
 				6A8415982E8D695400202D94 /* Example7View.swift */,
-				6A8415992E8D695400202D94 /* Example8View.swift */,
-				6A84159D2E8D695400202D94 /* Example9View.swift */,
+				6B11393C2E902BE20087595E /* Example8View.swift */,
+				6B11393E2E902C6E0087595E /* Example9View.swift */,
+				6A84159D2E8D695400202D94 /* Example10View.swift */,
 				6A84159B2E8D695400202D94 /* SelfTalkView.swift */,
 				6A0850952E8D688D00FF2A43 /* Assets.xcassets */,
 				6A0850972E8D688D00FF2A43 /* Preview Content */,
@@ -167,17 +170,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6B11393D2E902BE20087595E /* Example8View.swift in Sources */,
 				6A0850942E8D688C00FF2A43 /* ContentView.swift in Sources */,
-				6A8415A72E8D695400202D94 /* Example9View.swift in Sources */,
+				6A8415A72E8D695400202D94 /* Example10View.swift in Sources */,
 				6A8415A62E8D695400202D94 /* Example1View.swift in Sources */,
 				6A84159F2E8D695400202D94 /* Example5View.swift in Sources */,
 				6A8415A12E8D695400202D94 /* Example4View.swift in Sources */,
 				6A8415A02E8D695400202D94 /* Example3View.swift in Sources */,
-				6A8415A32E8D695400202D94 /* Example8View.swift in Sources */,
 				6A84159E2E8D695400202D94 /* Example6View.swift in Sources */,
 				6A8415A42E8D695400202D94 /* Example2View.swift in Sources */,
 				6A0850922E8D688C00FF2A43 /* NalaApp.swift in Sources */,
 				6A8415A52E8D695400202D94 /* SelfTalkView.swift in Sources */,
+				6B11393F2E902C6E0087595E /* Example9View.swift in Sources */,
 				6A8415A22E8D695400202D94 /* Example7View.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -312,7 +316,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nala/Preview Content\"";
-				DEVELOPMENT_TEAM = LZ4N3DYK25;
+				DEVELOPMENT_TEAM = 7LM775F9WE;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -341,7 +345,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nala/Preview Content\"";
-				DEVELOPMENT_TEAM = LZ4N3DYK25;
+				DEVELOPMENT_TEAM = 7LM775F9WE;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
