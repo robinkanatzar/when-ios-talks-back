@@ -44,7 +44,6 @@ final class Example8Speaker: ObservableObject {
 
 struct Example8View: View {
     @Environment(\.accessibilityVoiceOverEnabled) private var isVoiceOverOn
-    @State private var showVoiceOverAlert = false
     @StateObject private var speaker = Example8Speaker()
     @State private var utterance = ""
     
