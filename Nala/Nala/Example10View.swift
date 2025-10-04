@@ -1,326 +1,103 @@
 import SwiftUI
 import AVFoundation
-import Speech
 import Combine
 
-// MARK: - ViewModel
+private enum OutputMode: String, CaseIterable, Identifiable {
+    case audio = "Audio"
+    case text = "Text"
+    case both = "Audio + Text"
 
-final class Example10ViewModel: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
-    // Outgoing speech
+    var id: String { rawValue }
+}
+
+final class Example10Speaker: ObservableObject {
     private let synthesizer = AVSpeechSynthesizer()
-
-    // Incoming speech (ASR)
-    private let audioEngine = AVAudioEngine()
-    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
-    private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
-    private var recognitionTask: SFSpeechRecognitionTask?
-
-    // State for orchestration
-    private enum ListenTarget { case none, whosThere, nobelWho }
-    private struct Step {
-        let text: String
-        let voice: AVSpeechSynthesisVoice?
-        let listenTarget: ListenTarget
+    private var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        setupAudioSession()
+        observeVoiceOverStatus()
+        if UIAccessibility.isVoiceOverRunning {
+            stop()
+        }
     }
-
-    private var steps: [Step] = []
-    private var currentStepIndex: Int = 0
-    private var currentListenTarget: ListenTarget = .none
-    private var latestHeardPartial: String = ""
-
-    // UI state
-    @Published var permissionsGranted = false
-    @Published var isRunning = false
-    @Published var heardWhosThere: String = "—"
-    @Published var heardNobelWho: String = "—"
-    @Published var errorMessage: String?
-
-    // Voices
-    private let maleVoice: AVSpeechSynthesisVoice?
-    private let femaleVoice: AVSpeechSynthesisVoice?
-
-    override init() {
-        // Try to pick recognizable male/female voices if installed; fall back to language default.
-        func pickVoice(preferredNames: [String], language: String = "en-US") -> AVSpeechSynthesisVoice? {
-            let voices = AVSpeechSynthesisVoice.speechVoices().filter { $0.language == language }
-            for name in preferredNames {
-                if let v = voices.first(where: { $0.name.localizedCaseInsensitiveContains(name) }) {
-                    return v
+    
+    private func observeVoiceOverStatus() {
+        NotificationCenter.default.publisher(for: UIAccessibility.voiceOverStatusDidChangeNotification)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                if UIAccessibility.isVoiceOverRunning {
+                    self.stop()
                 }
             }
-            return AVSpeechSynthesisVoice(language: language)
-        }
-
-        self.maleVoice   = pickVoice(preferredNames: ["Alex", "Daniel", "Fred", "Aaron"])
-        self.femaleVoice = pickVoice(preferredNames: ["Samantha", "Karen", "Tessa", "Victoria"])
-
-        super.init()
-        synthesizer.delegate = self
-
-        // Pre-build the script
-        steps = [
-            Step(text: "Knock knock.",              voice: maleVoice,   listenTarget: .none),
-            Step(text: "Who's there?",              voice: femaleVoice, listenTarget: .whosThere),
-            Step(text: "Nobel.",                    voice: maleVoice,   listenTarget: .none),
-            Step(text: "Nobel who?",                voice: femaleVoice, listenTarget: .nobelWho),
-            Step(text: "No bell, that's why I knocked!", voice: maleVoice, listenTarget: .none),
-        ]
+            .store(in: &cancellables)
     }
-
-    // MARK: - Permissions
-
-    func requestPermissions() {
-        errorMessage = nil
-        SFSpeechRecognizer.requestAuthorization { status in
-            AVAudioSession.sharedInstance().requestRecordPermission { micOK in
-                DispatchQueue.main.async {
-                    self.permissionsGranted = (status == .authorized) && micOK
-                    if !self.permissionsGranted {
-                        self.errorMessage = "Microphone or Speech permission not granted."
-                    }
-                }
-            }
-        }
+    
+    func speak(_ text: String) {
+        guard !UIAccessibility.isVoiceOverRunning else { return }
+        let utterance = AVSpeechUtterance(string: text)
+        synthesizer.speak(utterance)
     }
-
-    // MARK: - Controls
-
-    func start() {
-        guard !isRunning else { return }
-        guard permissionsGranted else {
-            errorMessage = "Grant Microphone & Speech access to run the demo."
-            return
-        }
-        guard speechRecognizer?.isAvailable == true else {
-            errorMessage = "Speech recognizer not available for current locale."
-            return
-        }
-
-        errorMessage = nil
-        heardWhosThere = "—"
-        heardNobelWho = "—"
-        latestHeardPartial = ""
-        currentStepIndex = 0
-
-        do {
-            try configureAudioSession()
-        } catch {
-            errorMessage = "Audio session error: \(error.localizedDescription)"
-            return
-        }
-
-        isRunning = true
-        speakCurrentStep()
-    }
-
+    
     func stop() {
-        isRunning = false
-        stopRecognition(commit: false)
-
-        if audioEngine.isRunning { audioEngine.stop() }
-        audioEngine.inputNode.removeTap(onBus: 0)
-
-        if synthesizer.isSpeaking { synthesizer.stopSpeaking(at: .immediate) }
-
-        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        _ = synthesizer.stopSpeaking(at: .immediate)
     }
-
-    deinit {
-        stop()
-    }
-
-    // MARK: - Orchestration
-
-    private func speakCurrentStep() {
-        guard currentStepIndex < steps.count else {
-            isRunning = false
-            return
-        }
-
-        let step = steps[currentStepIndex]
-
-        // Start recognition for the female lines so we "hear" what she says.
-        if step.listenTarget != .none {
-            startRecognition(for: step.listenTarget)
-        } else {
-            stopRecognition(commit: false)
-        }
-
-        let u = AVSpeechUtterance(string: step.text)
-        u.voice = step.voice
-        u.rate = AVSpeechUtteranceDefaultSpeechRate
-        u.pitchMultiplier = 1.0
-        u.preUtteranceDelay = 0.1
-        u.postUtteranceDelay = 0.0
-
-        synthesizer.speak(u)
-    }
-
-    // Advance when an utterance finishes; if we were listening, commit what we heard.
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        // Give ASR a brief moment to flush tail of audio, then stop & commit.
-        let step = steps[currentStepIndex]
-        if step.listenTarget != .none {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                self.stopRecognition(commit: true)
-                self.advance()
-            }
-        } else {
-            advance()
-        }
-    }
-
-    private func advance() {
-        currentStepIndex += 1
-        if isRunning {
-            // Small pacing gap between lines
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                self.speakCurrentStep()
-            }
-        }
-    }
-
-    // MARK: - Audio + ASR
-
-    private func configureAudioSession() throws {
-        let session = AVAudioSession.sharedInstance()
-        // measurement mode avoids echo cancellation that might suppress device TTS.
-        try session.setCategory(.playAndRecord,
-                                mode: .measurement,
-                                options: [.defaultToSpeaker, .allowBluetooth, .duckOthers])
-        try session.setActive(true, options: .notifyOthersOnDeactivation)
-    }
-
-    private func startRecognition(for target: ListenTarget) {
-        stopRecognition(commit: false)
-
-        currentListenTarget = target
-        latestHeardPartial = ""
-
-        let request = SFSpeechAudioBufferRecognitionRequest()
-        request.shouldReportPartialResults = true
-        recognitionRequest = request
-
-        let inputNode = audioEngine.inputNode
-        let format = inputNode.outputFormat(forBus: 0)
-
-        inputNode.removeTap(onBus: 0)
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
-            self?.recognitionRequest?.append(buffer)
-        }
-
-        audioEngine.prepare()
-        do {
-            try audioEngine.start()
-        } catch {
-            errorMessage = "AudioEngine error: \(error.localizedDescription)"
-            return
-        }
-
-        recognitionTask = speechRecognizer?.recognitionTask(with: request) { [weak self] result, error in
-            guard let self else { return }
-            if let r = result {
-                DispatchQueue.main.async {
-                    self.latestHeardPartial = r.bestTranscription.formattedString
-                }
-            }
-            // If it ends early for any reason, we'll commit whatever we have on stopRecognition.
-            if error != nil || (result?.isFinal ?? false) {
-                // nothing special; normal commit happens on stopRecognition()
-            }
-        }
-    }
-
-    private func stopRecognition(commit: Bool) {
-        if commit {
-            switch currentListenTarget {
-            case .whosThere:
-                heardWhosThere = latestHeardPartial.isEmpty ? "—" : latestHeardPartial
-            case .nobelWho:
-                heardNobelWho = latestHeardPartial.isEmpty ? "—" : latestHeardPartial
-            case .none:
-                break
-            }
-        }
-
-        recognitionTask?.cancel()
-        recognitionTask = nil
-
-        recognitionRequest?.endAudio()
-        recognitionRequest = nil
-
-        audioEngine.inputNode.removeTap(onBus: 0)
-        if audioEngine.isRunning { audioEngine.stop() }
-
-        currentListenTarget = .none
-        latestHeardPartial = ""
+    
+    private func setupAudioSession() {
+        try? AVAudioSession.sharedInstance().setCategory(.playback, options: [.mixWithOthers])
+        try? AVAudioSession.sharedInstance().setActive(true)
     }
 }
 
-// MARK: - View
-
 struct Example10View: View {
-    @StateObject private var vm = Example10ViewModel()
-
+    @State private var mode: OutputMode = .audio
+    @StateObject private var speaker = Example10Speaker()
+    @State private var utterance = ""
+    
+    let jokes: [String] = [
+        "Knock knock. Who's there? Boo. Boo who? Don't cry. It's just a joke!",
+        "Knock knock. Who's there? Cow says. Cow says who? No, silly, cow says moooo!",
+        "Knock knock. Who's there? Lettuce. Lettuce who? Lettuce in, it's cold out here!"
+    ]
+    
     var body: some View {
-        VStack(spacing: 16) {
-            Text("Example 9: Knock-Knock (Phone talks to itself)")
-                .font(.title2).bold()
-
-            GroupBox("What you’ll hear") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Label("Man: “Knock knock.”", systemImage: "person")
-                    Label("Woman: “Who’s there?”", systemImage: "person.fill")
-                    Label("Man: “Nobel.”", systemImage: "person")
-                    Label("Woman: “Nobel who?”", systemImage: "person.fill")
-                    Label("Man: “No bell, that’s why I knocked!”", systemImage: "person")
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-
-            GroupBox("Speech API heard") {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("“Who’s there?” →").font(.callout).foregroundStyle(.secondary)
-                        Text(vm.heardWhosThere).font(.body).bold()
-                    }
-                    HStack {
-                        Text("“Nobel who?” →").font(.callout).foregroundStyle(.secondary)
-                        Text(vm.heardNobelWho).font(.body).bold()
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 12) {
+                // Subtitle
+                Text("The funniest application you've ever downloaded.")
+                
+                // Audio, Text, Audio + Text
+                Picker("Output mode", selection: $mode) {
+                    ForEach(OutputMode.allCases) { mode in
+                        Text(mode.rawValue).tag(mode)
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-
-            if let err = vm.errorMessage {
-                Text(err).foregroundColor(.red).font(.footnote)
-            }
-
-            HStack {
-                Button(vm.permissionsGranted ? "Permissions OK" : "Request Permissions") {
-                    vm.requestPermissions()
+                .pickerStyle(.segmented)
+                .accessibilityLabel("Output mode")
+                
+                // Button
+                HStack {
+                    Button("Tell me a joke") {
+                        utterance = jokes.randomElement() ?? ""
+                        if mode == .audio || mode == .both {
+                            speaker.speak(utterance)
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    Spacer()
                 }
-                .buttonStyle(.bordered)
+
+                // Joke text
+                if !utterance.isEmpty && (mode == .text || mode == .both) {
+                    Text(utterance)
+                }
 
                 Spacer()
-
-                if vm.isRunning {
-                    Button("Stop") { vm.stop() }
-                        .buttonStyle(.borderedProminent)
-                } else {
-                    Button("Start Joke") { vm.start() }
-                        .buttonStyle(.borderedProminent)
-                }
             }
-
-            Spacer()
-
-            Text("Tip: Recognition quality may vary because echo cancellation can suppress the device’s own voice.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+            .padding()
+            .navigationTitle("Example 10: ")
         }
-        .padding()
     }
 }
 

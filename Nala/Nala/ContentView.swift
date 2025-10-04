@@ -59,7 +59,7 @@ struct ContentView: View {
                     NavigationLink {
                         Example10View()
                     } label: {
-                        Text("Example 10: Joke phone talks to itself")
+                        Text("Example 10: ")
                     }
                     NavigationLink {
                         SelfTalkView()
