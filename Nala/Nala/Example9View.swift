@@ -102,5 +102,5 @@ struct Example9View: View {
 }
 
 #Preview {
-    KnockKnockJokeView()
+    Example9View()
 }
