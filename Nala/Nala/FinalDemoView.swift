@@ -206,15 +206,15 @@ struct FinalDemoView: View {
             try? await Task.sleep(for: .seconds(1.0))
 
             // Phone: "Lettuce"
-            addPhone("Lettuce")
+            addPhone("Theodore")
             try? await Task.sleep(for: .seconds(2.0))
 
             // User: stream "Lettuce who?"
-            await streamUserLine("Lettuce who?", perWordDelay: 0.45)
+            await streamUserLine("Theodore who?", perWordDelay: 0.45)
             try? await Task.sleep(for: .seconds(0.8))
 
             // Phone: punchline
-            addPhone("Lettuce in, it's cold outside.")
+            addPhone("Theodore wasn’t open, so I knocked.")
             isRunningScriptedJoke = false
         }
     }
