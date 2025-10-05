@@ -72,6 +72,14 @@ struct ContentView: View {
                         Text("Knock Knock Jokes View")
                     }
                     
+                    Divider()
+                    
+                    NavigationLink {
+                        FinalDemoView()
+                    } label: {
+                        Text("Final Demo")
+                    }
+                    
                     Spacer()
                 }
                 .padding()

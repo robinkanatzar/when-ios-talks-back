@@ -10,7 +10,7 @@ private enum OutputMode: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
-final class KnockKnockJokeSpeaker: ObservableObject {
+final class FinalDemoSpeaker: ObservableObject {
     private let synthesizer = AVSpeechSynthesizer()
     private var cancellables = Set<AnyCancellable>()
     
@@ -50,12 +50,12 @@ final class KnockKnockJokeSpeaker: ObservableObject {
     }
 }
 
-struct KnockKnockJokeView: View {
+struct FinalDemoView: View {
     @State private var mode: OutputMode = .audio
-    @StateObject private var speaker = KnockKnockJokeSpeaker()
+    @StateObject private var speaker = FinalDemoSpeaker()
     @State private var utterance = ""
     
-    let jokes: [String] = [
+    let jokes: [String] = [ // TODO: Replace with favorite joke
         "Knock knock. Who's there? Boo. Boo who? Don't cry. It's just a joke!",
         "Knock knock. Who's there? Cow says. Cow says who? No, silly, cow says moooo!",
         "Knock knock. Who's there? Lettuce. Lettuce who? Lettuce in, it's cold out here!"
@@ -96,7 +96,7 @@ struct KnockKnockJokeView: View {
                 Spacer()
             }
             .padding()
-            .navigationTitle("Knock Knock Jokes")
+            .navigationTitle("Knock Knock Jokes FINAL") // TODO: Remove final
         }
     }
 }
